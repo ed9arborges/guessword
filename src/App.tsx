@@ -17,6 +17,7 @@ export default function App() {
   const [letter, setLetter] = useState("")
   const [lettersUsed, setLettersUsed] = useState<LettersUsedProps[]>([])
   const [challenge, setChallenge ] = useState<Challenge | null>(null)
+  const [ shake, setShake ] = useState(false)
 
   const ATTEMPTS_MARGIN = 5 
 
@@ -66,7 +67,13 @@ export default function App() {
 
     setLettersUsed((prevState) => [...prevState, { value, correct }])
     setScore(currentScore)
+
     setLetter("")
+
+    if(!correct){
+      setShake(true)
+      setTimeout(() => setShake(false), 300)
+    }
   }
 
   function endGame(message: string){
@@ -112,7 +119,7 @@ export default function App() {
         
         <Tip tip={challenge.tip} />
 
-        <div className={styles.word}>
+        <div className={`${styles.word} ${shake && styles.shake}`}>
           { challenge.word.split("").map((letter, index) => {
             const letterUsed = lettersUsed.find(
               (used) => used.value.toUpperCase() === letter.toUpperCase()
